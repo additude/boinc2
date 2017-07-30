@@ -1,0 +1,26 @@
+<!--
+This is a minimal configuration file cc_config.xml of the BOINC core client.
+For a complete list of all available options and logging flags and their
+meaning see: https://boinc.berkeley.edu/wiki/client_configuration
+-->
+<cc_config>
+  <log_flags>
+    <task>1</task>
+    <file_xfer>1</file_xfer>
+    <sched_ops>1</sched_ops>
+  </log_flags>
+<proxy_info>
+    <use_http_proxy/>
+    <socks_server_name></socks_server_name>
+    <socks_server_port></socks_server_port>
+    <http_server_name>PROXYHOST</http_server_name>
+    <http_server_port>PROXYPORT</http_server_port>
+    <socks5_user_name></socks5_user_name>
+    <socks5_user_passwd></socks5_user_passwd>
+    <http_user_name></http_user_name>
+    <http_user_passwd></http_user_passwd>
+    <no_proxy>PROXYEXCL</no_proxy>
+</proxy_info>
+<allow_remote_gui_rpc>ALLOWREM</allow_remote_gui_rpc>
+<lower_client_priority>LOWPRIOR</lower_client_priority>
+</cc_config>
