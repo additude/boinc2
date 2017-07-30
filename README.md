@@ -61,11 +61,20 @@ global_prefs_override.xml
    <max_ncpus_pct>MAXNUMCPU</max_ncpus_pct>
    <cpu_usage_limit>MAXUSECPU</cpu_usage_limit>
 ```
-Information about these parameters can be found here:
+
+Couple other variables:
+
+REMHOST is the host allowed to remotely communicate with boinc client (-e REMHOST=Z.Z.Z.Z)
+
+LOWPRIOR is to change the `nice` value of the process (default is on [which is 19] -e LOWPRIOR=1)
+
+
+Information about parameters can be found here:
+
 https://boinc.berkeley.edu/wiki/Global_prefs_override.xml
+
 https://boinc.berkeley.edu/wiki/Client_configuration
 
-One other variable is REMHOST which the host allowed to remotely communicate with boinc client.  Add -e REMHOST=Z.Z.Z.Z to your docker run
 
 ### Notes/Caveats/Issues:
 1.	-h HOSTNAME - I recommend that you use this option (choose your own hostname) so that your host id for boinc is not the container id.
