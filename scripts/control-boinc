@@ -28,7 +28,7 @@ repo="my-docker-repo-host:port"
 
 [ ! -d ${srcdir} ] && echo "ERROR - dir ${srcdir} is missing" && exit 1
 
-echo ${repo} | awk -F: '{print "`which nc` -v -w 10 -z " $1 " " $2}' |sh
+echo ${repo} | awk -F: '{print "`which nc` -v -w 10 -z " $1 " " $2}' |sh > /dev/null 2>&1
 [ $? -ne 0 ] && echo "ERROR - your docker repo ${repo} is not responding" && exit 1  || > /dev/null
 
 function do_start {
