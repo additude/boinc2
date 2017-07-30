@@ -19,6 +19,35 @@ restart -- execs destroy then start
 
 destroy -- execs stop then rm
 
+### Prerequisite
+You'll need a docker repo host in order to run the `update`.  If you don't use a repo you'll need to replace the following in the start function:
+```sh
+  docker run --name=boinc -h ${getname} -d \
+  -e ALLOWREM=${ALLOWREM} \
+  -e REMHOST=${REMHOST} \
+  -e PROXYHOST=${PROXYHOST} \
+  -e PROXYPORT=${PROXYPORT} \
+  -e PROXYEXCL=${PROXYEXCL} \
+  -e LOWPRIOR=${LOWPRIOR} \
+  -e MAXUSECPU=${MAXUSECPU} \
+  -e IFUSECPU=${IFUSECPU} \
+  -e MAXNUMCPU=${MAXNUMCPU} \
+  -p 31416:31416 -v ${srcdir}:${dstdir} ${repo}/${cname}
+```
+with
+```sh
+  docker run --name=boinc -h ${getname} -d \
+  -e ALLOWREM=${ALLOWREM} \
+  -e REMHOST=${REMHOST} \
+  -e PROXYHOST=${PROXYHOST} \
+  -e PROXYPORT=${PROXYPORT} \
+  -e PROXYEXCL=${PROXYEXCL} \
+  -e LOWPRIOR=${LOWPRIOR} \
+  -e MAXUSECPU=${MAXUSECPU} \
+  -e IFUSECPU=${IFUSECPU} \
+  -e MAXNUMCPU=${MAXNUMCPU} \
+  -p 31416:31416 -v ${srcdir}:${dstdir} ${cname}
+```
 
 
 ### Configuration:
