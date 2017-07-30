@@ -1,0 +1,108 @@
+#!/bin/bash
+#
+# script to easily manage running and modifying your boinc-client docker container
+# there's lots of other validations I should add but I didn't intend to release 
+# it to the public
+#
+#
+# Kyle O'Donnell <kyleo[at]0b10[dot]mx>
+#
+
+[ $# -ne 1 ] && echo "usage: $0 <start|stop|status|rm|update|bash|restart|destroy>" && exit 1
+
+# what do you want me to do
+act=$1
+# create dummy hostnames that will be consistent based on the last
+# 2 octets of the main host's ip address
+getname=$(host `hostname`|awk '{print $NF}'|awk -F. '{print "hostname-" $3 "-" $4}')
+# where do i put stuff
+srcdir="/data/boinc-client"
+# where does the app inside the container look for my stuff
+dstdir="/var/lib/boinc-client"
+# whats my container name
+cname="boinc"
+# where do i find this magical container
+repo="my-docker-repo-host:port"
+
+# let's put some checks here to make sure your vars are good
+
+[ ! -d ${srcdir} ] && echo "ERROR - dir ${srcdir} is missing" && exit 1
+
+echo ${repo} | awk -F: '{print "`which nc` -v -w 10 -z " $1 " " $2}' |sh
+[ $? -ne 0 ] && echo "ERROR - your docker repo ${repo} is not responding" && exit 1  || > /dev/null
+
+function do_start {
+  # set some defaults
+  ALLOWREM=1
+  REMHOST=changeme-or-dontsetme
+  PROXYHOST=changeme-or-dontsetme
+  PROXYPORT=changeme-or-dontsetme
+  PROXYEXCL=changeme-or-dontsetme
+  LOWPRIOR=1
+  MAXUSECPU=66.666666
+  IFUSECPU=66.000000
+  MAXNUMCPU=100.00000
+
+  # overrides for some hosts we dont want to kill. this method can be used to all vars
+  # if you'd prefer you could create a separate file with these falues and source it here
+  # source myconfig.sh
+  [ "${getname}" == "hostname-12-57" ] && MAXNUMCPU=50.00000
+  [ "${getname}" == "hostname-12-58" ] && MAXNUMCPU=50.00000
+
+  docker run --name=boinc -h ${getname} -d \
+  -e ALLOWREM=${ALLOWREM} \
+  -e REMHOST=${REMHOST} \
+  -e PROXYHOST=${PROXYHOST} \
+  -e PROXYPORT=${PROXYPORT} \
+  -e PROXYEXCL=${PROXYEXCL} \
+  -e LOWPRIOR=${LOWPRIOR} \
+  -e MAXUSECPU=${MAXUSECPU} \
+  -e IFUSECPU=${IFUSECPU} \
+  -e MAXNUMCPU=${MAXNUMCPU} \
+  -p 31416:31416 -v ${srcdir}:${dstdir} ${repo}/${cname}
+}
+
+function do_bash {
+  docker exec -it ${cname} bash
+}
+
+function do_update {
+  docker pull ${repo}/${cname}
+}
+
+function do_stop {
+  docker kill ${cname}
+}
+
+function do_rm {
+  docker rm ${cname}
+}
+
+function do_status {
+   docker ps|grep ${cname}
+   if [ $? -ne 0 ]; then
+     echo "INFO - ${cname} container is not running" 
+  fi
+}
+
+function do_destroy {
+  do_stop
+  do_rm
+}
+
+function do_restart {
+  do_destroy
+  do_start
+}
+
+case ${act} in
+  start) do_start;;
+  restart) do_restart;;
+  bash) do_bash;;
+  stop) do_stop;;
+  status) do_status;;
+  rm) do_rm;;
+  destroy) do_destroy;;
+  update) do_update;;
+  *) echo "ERROR - cli ${act} is not support" && exit 1
+esac
