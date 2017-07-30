@@ -89,5 +89,5 @@ repo="my-docker-repo-host:port"
 ### Bulk Run Example
 Here's how I run it
 ```sh
-parallel-ssh -h /path/to/hostlist -O LogLevel=QUIET -i "sudo -H -u myuser /home/myuser/control-boinc $1"
+parallel-ssh -h /path/to/hostlist -O LogLevel=QUIET -i "/home/myuser/control-boinc $1"
  ```
