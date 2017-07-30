@@ -5,27 +5,21 @@ This container will run the boinc_client.  It is built so that you can host all 
 I forked this from https://github.com/bcleonard/boinc and have added a bunch of things to make the container more flexible.
 
 ### Preperation
-Before running the container, you'll need to have the following directories predefined on the container host:
+Before running the container, you'll need to have the following directory predefined on the container host.  The boinc directory will hold all of your boinc data and make persistant.  Make sure you create it prior to starting the container.  I used:
 ```sh
-boinc
+mkdir -p /data/boinc
 ```
-It will also need to be owned or read/writable by the user/group root as the boinc_client runs as root in the container.  The boinc directory will hold all of your boinc data and make persistant.  I used:
-```sh
-/data/boinc
-```
-for the instructions below.  Just make sure you create it prior to starting the container.
 ### Running:
 To run without any customizations and accept defaults use the below
 ```sh
 docker run --name=boinc -h HOSTNAME -p 31416:31416 -v /data/boinc:/var/lib/boinc-client boinc 
 ```
-To add some customizion options to the boinc-client cc_config.xml and/or global_prefs_override.xml files variable can be set via docker:
+Viarables can be passed to docker for configuring the boinc-client:
 ```sh
 docker run --name=boinc -h HOSTNAME -e PROXYHOST=X.X.X.X -e PROXYPORT=YYYY -e PROXYEXCL=10.0.0.0/8 -e ALLOWREM=1 -e MAXNUMCPU=75.000000 -p 31416:31416 -v /data/boinc:/var/lib/boinc-client boinc
 ```
 See below for a full list of currently available variables.
 
-Please see the Notes/Caveats/Issues below for more information.
 ### Configuration:
 As I said before, /data/boinc will hold all of your project data.  You can prepopulate any files you need or let the client initialize it for you.
 You will need to configure the boinc_client before it can do any actual work.  I recommend running the following:
