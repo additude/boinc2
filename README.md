@@ -70,7 +70,7 @@ I use BOINCTasks to manage my boinc clients instead of an account manager, check
 
 https://efmer.com/
 
-If you use an account manager you'll need to modify the template files as well as the startup.sh script to include these (or hard code them in the template files if you like.
+If you use an account manager you'll need to modify the template files as well as the startup.sh script to include these (or hard code them in the template files if you like).
 
 
 ### Notes/Caveats/Issues:
